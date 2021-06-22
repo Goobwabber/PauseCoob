@@ -8,6 +8,12 @@ using SiraUtil.Zenject;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using SlicePause.Installers;
+using System;
+using UnityEngine.SceneManagement;
+using Zenject;
+using IPA.Config;
+using IPA.Config.Stores;
 
 namespace SlicePause
 {
@@ -19,6 +25,7 @@ namespace SlicePause
         internal static Plugin Instance { get; private set; } = null!;
         internal static PluginMetadata PluginMetadata = null!;
         internal static IPALogger Log { get; private set; } = null!;
+        internal static PluginConfig Config = null!;
 
         internal static HttpClient HttpClient { get; private set; } = null!;
         internal static Harmony? _harmony;
@@ -30,12 +37,28 @@ namespace SlicePause
             }
         }
 
+        internal static GameObject? coob;
+
         [Init]
-        public Plugin(IPALogger logger, Zenjector zenjector, PluginMetadata pluginMetadata)
+        public Plugin(IPALogger logger, Config conf, Zenjector zenjector, PluginMetadata pluginMetadata)
         {
             Instance = this;
             PluginMetadata = pluginMetadata;
             Log = logger;
+            Config = conf.Generated<PluginConfig>();
+
+            zenjector.On((scene, context, container) => {
+                if (scene.name == "ShaderWarmup")
+                {
+                    coob = UnityEngine.Object.Instantiate(GameObject.Find("NormalGameNote").transform.Find("NoteCube")).gameObject;
+                    UnityEngine.Object.DontDestroyOnLoad(coob);
+                    coob.SetActive(false);
+                }
+
+                return true;
+            });
+
+            zenjector.OnGame<CoobInstaller>();
         }
 
         [OnStart]
