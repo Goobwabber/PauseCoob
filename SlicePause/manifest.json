@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
+  "id": "SlicePause",
+  "name": "SlicePause",
+  "author": "Goobwabber",
+  "version": "0.1.0",
+  "description": "Slice to pause.",
+  "gameVersion": "1.16.2",
+  "dependsOn": {
+    "BSIPA": "^4.1.4",
+    "SiraUtil": "^2.5.2"
+  },
+  "links": {
+    "project-home": "https://github.com/Goobwabber/SlicePause",
+    "donate": "https://github.com/Goobwabber/SlicePause#donate"
+  }
+}
