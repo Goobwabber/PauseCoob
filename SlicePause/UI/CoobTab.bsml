@@ -2,6 +2,7 @@
     <modifier-container horizontal-fit='PreferredSize' preferred-width='90'>
         <checkbox-setting text='Show coob' value='show-coob' apply-on-change='true' bind-value='true'/>
         <increment-setting text='Coob scale' value='coob-scale' increment='0.1' apply-on-change='true' bind-value='true'/>
+        <dropdown-list-setting text='Coob type' options='coob-type-options' value='coob-type' formatter='coob-type-formatter' apply-on-change='true' bind-value='true'/>
         <button text='Pick color' click-event='show-coob-color'/>
         <modal-color-picker id='modal' value='coob-color' clickerino-offerino-closerino='true' show-event='show-coob-color'/>
     </modifier-container>

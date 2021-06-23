@@ -7,25 +7,23 @@ namespace SlicePause.Installers
 {
     class CoobInstaller : MonoInstaller
     {
+        const float cutTimeout = 2f;
+
         public override void InstallBindings() { }
 
         public override void Start()
         {
             Coob coob = Container.Resolve<Coob>();
+            Container.Inject(coob);
+
+            PauseController pauseController = Container.Resolve<PauseController>();
+
             if (coob != null) {
                 coob.SetVisible(true);
-
-                BoxCuttableBySaber[] boxes = coob.GetComponentsInChildren<BoxCuttableBySaber>();
-
-                BoxCuttableBySaber.WasCutBySaberDelegate pausepls = (Saber saber, Vector3 cutPoint, Quaternion orientation, Vector3 cutDirVec) =>
-                {
-                    Container.Resolve<PauseController>().Pause();
-                };
-
-                foreach(BoxCuttableBySaber box in boxes)
-                {
-                    box.wasCutBySaberEvent += pausepls;
-                }
+                coob.cutable = true;
+                coob.CoobWasCutEvent += () => pauseController.Pause();
+                pauseController.didResumeEvent += () => coob.Respawn(cutTimeout);
+                pauseController.didPauseEvent += () => coob.Despawn();
             }
         }
     }

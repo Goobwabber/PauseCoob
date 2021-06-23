@@ -43,6 +43,7 @@ namespace SlicePause.Objects
                     if (_grabbingController != null) return;
                     if (Physics.Raycast(pointer.vrController.position, pointer.vrController.forward, out RaycastHit hit, MaxLaserDistance))
                     {
+                        Plugin.Log?.Info(hit.transform.name);
                         if (hit.transform != _handle && !hit.transform.IsChildOf(_handle)) return;
                         _grabbingController = pointer.vrController;
                         _grabPos = pointer.vrController.transform.InverseTransformPoint(transform.position);

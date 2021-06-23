@@ -2,7 +2,9 @@
 using BeatSaberMarkupLanguage.GameplaySetup;
 using SlicePause.Objects;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 using Zenject;
 
@@ -23,36 +25,46 @@ namespace SlicePause.UI
         [UIValue("show-coob")]
         public bool ShowCoobValue
         {
-            get => coob.isActiveAndEnabled;
+            get => coob.visible;
             set {
-                if (value)
-                    Plugin.Log?.Debug("Showing coob");
-
-                if (coob != null)
-                    coob.SetVisible(value);
-                else
-                    Plugin.Log?.Warn("Coob not found!");
-
+                coob.visible = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowCoobValue)));
             }
         }
 
         [UIValue("coob-color")]
-        public Color CoobColor
+        public Color CoobColorValue
         {
             get => coob.color;
             set => coob.color = value;
         }
 
         [UIValue("coob-scale")]
-        public float CoobScale
+        public float CoobScaleValue
         {
             get => coob.scale;
             set {
                 coob.scale = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CoobScale)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CoobScaleValue)));
             }
         }
+
+        [UIValue("coob-type")]
+        public Coob.CoobType CoobTypeValue
+        {
+            get => coob.type;
+            set
+            {
+                coob.type = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CoobTypeValue)));
+            }
+        }
+
+        [UIValue("coob-type-options")]
+        public List<object> CoobTypeOptions = new object[] { Coob.CoobType.None, Coob.CoobType.Arrow, Coob.CoobType.Circle}.ToList();
+
+        [UIAction("coob-type-formatter")]
+        public string CoobTypeFormatter(Coob.CoobType type) => type.ToString();
 
         public CoobTab(Coob _coob, GameplaySetupViewController _gameplaySetupViewController)
         {
@@ -63,8 +75,10 @@ namespace SlicePause.UI
         public void Initialize()
         {
             ShowCoobValue = false;
-            GameplaySetup.instance.AddTab("Coob", "SlicePause.UI.CoobTab.bsml", this, MenuType.All);
             gameplaySetupViewController.didDeactivateEvent += YeetModalEvent;
+
+            GameplaySetup.instance.AddTab("Coob", "SlicePause.UI.CoobTab.bsml", this, MenuType.All);
+
             Plugin.Log?.Info("Installed Coob UI");
         }
 

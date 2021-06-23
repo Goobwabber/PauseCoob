@@ -13,8 +13,9 @@ namespace SlicePause.Installers
 
             if (coob != null)
             {
-                coob.SetVisible(false);
+                coob.Respawn(0f, false);
                 coob.Refresh();
+                coob.cutable = false;
 
                 if (coob.GetComponent<Floatie>() == null)
                 {
