@@ -32,6 +32,17 @@ namespace SlicePause.UI
             }
         }
 
+        [UIValue("cut-coob")]
+        public bool CutCoobValue
+        {
+            get => coob.cutable;
+            set
+            {
+                coob.cutable = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CutCoobValue)));
+            }
+        }
+
         [UIValue("coob-color")]
         public Color CoobColorValue
         {
@@ -74,7 +85,6 @@ namespace SlicePause.UI
 
         public void Initialize()
         {
-            ShowCoobValue = false;
             gameplaySetupViewController.didDeactivateEvent += YeetModalEvent;
 
             GameplaySetup.instance.AddTab("Coob", "SlicePause.UI.CoobTab.bsml", this, MenuType.All);

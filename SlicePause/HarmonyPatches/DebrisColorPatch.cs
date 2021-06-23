@@ -7,17 +7,14 @@ namespace SlicePause.HarmonyPatches
     internal class DebrisColorPatch
     {
         internal static bool enabled = false;
+        internal static Color color;
 
         static bool Prefix(ref Color __result)
         {
             if (enabled)
             {
-                Color color;
-                if (ColorUtility.TryParseHtmlString(Plugin.Config.Color, out color))
-                {
-                    __result = color;
-                    return false;
-                }
+                __result = color;
+                return false;
             }
             return true;
         }

@@ -10,6 +10,9 @@ using SlicePause.Installers;
 using IPA.Config;
 using IPA.Config.Stores;
 using SlicePause.Objects;
+using Zenject;
+using SlicePause.Managers;
+using UnityEngine.SceneManagement;
 
 namespace SlicePause
 {
@@ -42,15 +45,21 @@ namespace SlicePause
             Config = conf.Generated<PluginConfig>();
 
             zenjector.OnMenu<MenuInstaller>();
-            zenjector.OnGame<CoobInstaller>();
-            zenjector.On((scene, context, container) => {
+            zenjector.OnGame<GameInstaller>();
+            zenjector.On((scene, context, Container) => {
                 if (scene.name == "ShaderWarmup")
                 {
                     GameObject coobGO = Object.Instantiate(GameObject.Find("NormalGameNote").transform.Find("NoteCube")).gameObject;
                     Object.DontDestroyOnLoad(coobGO);
-                    container.ParentContainers[0].Bind<Coob>().FromNewComponentOn(coobGO).AsSingle();
 
-                    Log?.Info("Stole the coob!!");
+                    DiContainer AppContainer = Container.ParentContainers[0];
+
+                    AppContainer.BindInterfacesAndSelfTo<CoobCutInfoManager>().AsSingle();
+                    AppContainer.BindInterfacesAndSelfTo<CoobDebrisManager>().AsSingle();
+                    AppContainer.BindInterfacesAndSelfTo<CoobFlyingScoreManager>().AsSingle();
+                    AppContainer.Bind<Coob>().FromNewComponentOn(coobGO).AsSingle();
+
+                    Log?.Info("ShaderWarmup finished.");
                 }
 
                 return true;

@@ -1,42 +1,27 @@
-﻿using SlicePause.Objects;
+﻿using SlicePause.Managers;
+using SlicePause.Objects;
 using SlicePause.UI;
+using System.Linq;
+using UnityEngine;
+using VRUIControls;
 using Zenject;
 
 namespace SlicePause.Installers
 {
-    class MenuInstaller : MonoInstaller
+    class MenuInstaller : Installer
     {
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<CoobTab>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MenuManager>().AsSingle();
             Coob coob = Container.Resolve<Coob>();
 
-            if (coob != null)
-            {
-                coob.Respawn(0f, false);
-                coob.Refresh();
-                coob.cutable = false;
+            Container.InstantiateComponentOnNewGameObject<MenuSaber>("CoobMenuSaber");
 
-                if (coob.GetComponent<Floatie>() == null)
-                {
-                    Floatie floatie = Container.InstantiateComponent<Floatie>(coob.gameObject);
-                    floatie.Init(coob.gameObject);
+            if (coob.GetComponent<Floatie>() == null)
+                Container.InstantiateComponent<Floatie>(coob.gameObject);
 
-                    floatie.OnRelease += (position, rotation) =>
-                    {
-                        coob.SetPositionAndRotation(position, rotation);
-                    };
-
-                    floatie.OnGrab += (position, rotation) =>
-                    {
-                        Plugin.Log?.Info("Grabbed the coob!");
-                    };
-
-                    Plugin.Log?.Info("Installed floatie!");
-                }
-            }
-            else
-                Plugin.Log?.Warn("Coob not found!");
+            Plugin.Log?.Info("Coob installed in menu scene.");
         }
     }
 }

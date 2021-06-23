@@ -1,4 +1,5 @@
 ﻿using IPA.Utilities;
+using SlicePause.Managers;
 using System;
 using System.Collections;
 using System.Linq;
@@ -7,21 +8,19 @@ using Zenject;
 
 namespace SlicePause.Objects
 {
-    public class Coob : MonoBehaviour, ISaberSwingRatingCounterDidFinishReceiver
+    public class Coob : MonoBehaviour, IDisposable
     {
-        MeshRenderer renderer = null!;
-        Material material = null!;
-        Collider collider = null!;
-        CutoutAnimateEffect animateEffect = null!;
-        BoxCuttableBySaber[] boxes = null!;
-        NoteCutScoreSpawner noteCutScoreSpawner = null!;
-        FlyingScoreSpawner flyingScoreSpawner = null!;
-        SaberSwingRatingCounter.Pool saberSwingRatingCounterPool = null!;
-        NoteCutCoreEffectsSpawner noteCutCoreEffectsSpawner = null!;
-        NoteDebrisSpawner noteDebrisSpawner = null!;
+        private MeshRenderer _renderer = null!;
+        private Collider _collider = null!;
+        private CutoutAnimateEffect _animateEffect = null!;
+        private BoxCuttableBySaber[] _cutableBoxes = null!;
 
-        bool _cutable = false;
-        bool _visible = false;
+        protected CoobCutInfoManager _coobCutInfoManager = null!;
+        protected CoobDebrisManager _coobDebrisManager = null!;
+        protected CoobFlyingScoreManager _coobFlyingScoreManager = null!;
+
+        private bool _cutable = false;
+        private bool _visible = false;
 
         const float cutoutTime = 1f;
 
@@ -40,7 +39,7 @@ namespace SlicePause.Objects
         }
 
         public Color color {
-            get => material.color;
+            get => _renderer.material.color;
             set => SetColor(value);
         }
 
@@ -57,32 +56,33 @@ namespace SlicePause.Objects
         }
 
         [Inject]
-        internal void Inject([InjectOptional]NoteCutScoreSpawner _noteCutScoreSpawner, [InjectOptional]SaberSwingRatingCounter.Pool _saberSwingRatingCounterPool)
+        internal void Inject([InjectOptional] CoobCutInfoManager coobCutInfoManager, [InjectOptional] CoobDebrisManager coobDebrisManager, [InjectOptional] CoobFlyingScoreManager coobFlyingScoreManager)
         {
-            noteCutScoreSpawner = _noteCutScoreSpawner;
-            saberSwingRatingCounterPool = _saberSwingRatingCounterPool;
-
-            if (noteCutScoreSpawner != null)
-            {
-                flyingScoreSpawner = noteCutScoreSpawner.GetField<FlyingScoreSpawner, NoteCutScoreSpawner>("_flyingScoreSpawner");
-            }
-
-            noteDebrisSpawner = Resources.FindObjectsOfTypeAll<NoteDebrisSpawner>().FirstOrDefault();
+            _coobCutInfoManager = coobCutInfoManager;
+            _coobDebrisManager = coobDebrisManager;
+            _coobFlyingScoreManager = coobFlyingScoreManager;
         }
 
         public void Awake()
         {
-            collider = gameObject.AddComponent<BoxCollider>();
-            renderer = GetComponent<MeshRenderer>();
-            material = renderer.material;
-            animateEffect = gameObject.AddComponent<CutoutAnimateEffect>();
+            _collider = gameObject.AddComponent<BoxCollider>();
+            _renderer = GetComponent<MeshRenderer>();
+            _animateEffect = gameObject.AddComponent<CutoutAnimateEffect>();
             CutoutEffect[] cutoutEffects = GetComponents<CutoutEffect>();
-            animateEffect.SetField<CutoutAnimateEffect, CutoutEffect[]>("_cuttoutEffects", cutoutEffects);
-            boxes = GetComponentsInChildren<BoxCuttableBySaber>();
+            _animateEffect.SetField<CutoutAnimateEffect, CutoutEffect[]>("_cuttoutEffects", cutoutEffects);
+            _cutableBoxes = GetComponentsInChildren<BoxCuttableBySaber>();
 
-            foreach (BoxCuttableBySaber box in boxes)
+            foreach (BoxCuttableBySaber box in _cutableBoxes)
             {
                 box.wasCutBySaberEvent += WasCutBySaber;
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (BoxCuttableBySaber box in _cutableBoxes)
+            {
+                box.wasCutBySaberEvent -= WasCutBySaber;
             }
         }
 
@@ -94,14 +94,14 @@ namespace SlicePause.Objects
             {
                 render.enabled = value;
             }
-            renderer.enabled = value;
+            _renderer.enabled = value;
 
             Collider[] colliders = GetComponentsInChildren<Collider>();
             foreach (Collider col in colliders)
             {
                 col.enabled = value;
             }
-            collider.enabled = value;
+            _collider.enabled = value;
         }
 
         public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
@@ -120,7 +120,7 @@ namespace SlicePause.Objects
 
         public void SetColor(Color color)
         {
-            material.color = color;
+            _renderer.material.color = color;
             Plugin.Config.Color = "#" + ColorUtility.ToHtmlStringRGBA(color);
         }
 
@@ -146,6 +146,7 @@ namespace SlicePause.Objects
             _cutable = value;
             transform.Find("BigCuttable").gameObject.SetActive(value);
             transform.Find("SmallCuttable").gameObject.SetActive(value);
+            //GetComponent<Floatie>().enabled = !value;
 
             SetVisible(_visible);
         }
@@ -172,50 +173,23 @@ namespace SlicePause.Objects
                 cutable = false;
                 StartCoroutine(DespawnCoob());
 
-                if (saberSwingRatingCounterPool != null && flyingScoreSpawner != null)
+                if (_coobCutInfoManager != null)
                 {
-                    bool speedOK;
-                    bool directionOK;
-                    bool saberTypeOK;
-                    float cutDirDeviation;
-                    float cutDirAngle;
-                    NoteBasicCutInfoHelper.GetBasicCutInfo(this.transform, ColorType.ColorA, NoteCutDirection.Any, SaberType.SaberA, saber.bladeSpeed, cutDirVec, 90f, out directionOK, out speedOK, out saberTypeOK, out cutDirDeviation, out cutDirAngle);
+                    NoteCutInfo noteCutInfo = _coobCutInfoManager.GetCutInfo(this.transform, saber, cutPoint, orientation, cutDirVec, 90f);
 
-                    SaberSwingRatingCounter saberSwingRatingCounter = null;
-                    if (speedOK && directionOK && saberTypeOK)
-                    {
-                        saberSwingRatingCounter = saberSwingRatingCounterPool.Spawn();
-                        saberSwingRatingCounter.Init(saber.movementData, transform);
-                        saberSwingRatingCounter.RegisterDidFinishReceiver(this);
-                    }
+                    //flyingScoreSpawner.SpawnFlyingScore(in noteCutInfo, 0, 8, transform.position, transform.rotation, Quaternion.Inverse(transform.rotation), color);
+                    if (_coobFlyingScoreManager != null)
+                        _coobFlyingScoreManager.SpawnFlyingScore(this.transform, in noteCutInfo, Vector3.up, color, 0.7f, 1);
 
-                    Vector3 vector = orientation * Vector3.up;
-                    Plane plane = new Plane(vector, cutPoint);
-                    float cutDistanceToCenter = Mathf.Abs(plane.GetDistanceToPoint(transform.position));
-                    NoteCutInfo noteCutInfo = new NoteCutInfo(speedOK, directionOK, saberTypeOK, false, saber.bladeSpeed, cutDirVec, saber.saberType, 0.01f, cutDirDeviation, plane.ClosestPointOnPlane(transform.position), vector, cutDistanceToCenter, cutDirAngle, saberSwingRatingCounter);
-
-                    flyingScoreSpawner.SpawnFlyingScore(in noteCutInfo, 0, 8, transform.position, transform.rotation, Quaternion.Inverse(transform.rotation), color);
-
-                    if (noteDebrisSpawner != null)
-                    {
-                        HarmonyPatches.DebrisColorPatch.enabled = true;
-                        noteDebrisSpawner.SpawnDebris(noteCutInfo.cutPoint, noteCutInfo.cutNormal, noteCutInfo.saberSpeed, noteCutInfo.saberDir, transform.position, transform.rotation, transform.localScale, ColorType.ColorA, 10f, new Vector3(0, 1, 0));
-                        HarmonyPatches.DebrisColorPatch.enabled = false;
-                    }
-                    else
-                        Plugin.Log?.Warn("Debris Spawner not found.");
+                    //noteDebrisSpawner.SpawnDebris(noteCutInfo.cutPoint, noteCutInfo.cutNormal, noteCutInfo.saberSpeed, noteCutInfo.saberDir, transform.position, transform.rotation, transform.localScale, ColorType.ColorA, 10f, new Vector3(0, 1, 0));
+                    if (_coobDebrisManager != null)
+                        _coobDebrisManager.SpawnDebris(this.transform, noteCutInfo, color, Vector3.up);
                 }
                 else
                     Plugin.Log?.Warn("Requirements for block cut not found.");
 
                 CoobWasCutEvent?.Invoke();
             }
-        }
-
-        public virtual void HandleSaberSwingRatingCounterDidFinish(ISaberSwingRatingCounter saberSwingRatingCounter)
-        {
-            saberSwingRatingCounterPool.Despawn((SaberSwingRatingCounter)saberSwingRatingCounter);
-            saberSwingRatingCounter.UnregisterDidFinishReceiver(this);
         }
 
         public void Respawn(float delay, bool visibility = true)
@@ -230,7 +204,7 @@ namespace SlicePause.Objects
 
         IEnumerator DespawnCoob()
         {
-            yield return animateEffect.AnimateToCutoutCoroutine(0f, 1f, Time.deltaTime * cutoutTime);
+            yield return _animateEffect.AnimateToCutoutCoroutine(0f, 1f, Time.deltaTime * cutoutTime);
             SetVisible(false);
             yield return null;
         }
@@ -238,7 +212,7 @@ namespace SlicePause.Objects
         IEnumerator RespawnCoob(float delay, bool visibility)
         {
             yield return new WaitForSeconds(delay);
-            yield return animateEffect.AnimateToCutoutCoroutine(1f, 0f, Time.deltaTime * cutoutTime);
+            yield return _animateEffect.AnimateToCutoutCoroutine(1f, 0f, Time.deltaTime * cutoutTime);
             SetVisible(visibility);
             cutable = visibility;
             yield return null;
