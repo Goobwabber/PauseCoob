@@ -26,7 +26,7 @@ namespace SlicePause.HarmonyPatches
 
         static HarmonyManager()
         {
-            
+            AddDefaultPatch<DebrisColorPatch>();
         }
 
         private static void AddDefaultPatch<T>() where T : class

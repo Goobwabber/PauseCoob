@@ -146,6 +146,8 @@ namespace SlicePause.Objects
             _cutable = value;
             transform.Find("BigCuttable").gameObject.SetActive(value);
             transform.Find("SmallCuttable").gameObject.SetActive(value);
+
+            SetVisible(_visible);
         }
 
         public void Refresh()
@@ -196,7 +198,9 @@ namespace SlicePause.Objects
 
                     if (noteDebrisSpawner != null)
                     {
+                        HarmonyPatches.DebrisColorPatch.enabled = true;
                         noteDebrisSpawner.SpawnDebris(noteCutInfo.cutPoint, noteCutInfo.cutNormal, noteCutInfo.saberSpeed, noteCutInfo.saberDir, transform.position, transform.rotation, transform.localScale, ColorType.ColorA, 10f, new Vector3(0, 1, 0));
+                        HarmonyPatches.DebrisColorPatch.enabled = false;
                     }
                     else
                         Plugin.Log?.Warn("Debris Spawner not found.");
