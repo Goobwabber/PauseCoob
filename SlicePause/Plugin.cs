@@ -5,15 +5,11 @@ using IPALogger = IPA.Logging.Logger;
 using System.Net.Http;
 using SlicePause.HarmonyPatches;
 using SiraUtil.Zenject;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using SlicePause.Installers;
-using System;
-using UnityEngine.SceneManagement;
-using Zenject;
 using IPA.Config;
 using IPA.Config.Stores;
+using SlicePause.Objects;
 
 namespace SlicePause
 {
@@ -37,8 +33,6 @@ namespace SlicePause
             }
         }
 
-        internal static GameObject? coob;
-
         [Init]
         public Plugin(IPALogger logger, Config conf, Zenjector zenjector, PluginMetadata pluginMetadata)
         {
@@ -47,18 +41,20 @@ namespace SlicePause
             Log = logger;
             Config = conf.Generated<PluginConfig>();
 
+            zenjector.OnMenu<MenuInstaller>();
+            zenjector.OnGame<CoobInstaller>();
             zenjector.On((scene, context, container) => {
                 if (scene.name == "ShaderWarmup")
                 {
-                    coob = UnityEngine.Object.Instantiate(GameObject.Find("NormalGameNote").transform.Find("NoteCube")).gameObject;
-                    UnityEngine.Object.DontDestroyOnLoad(coob);
-                    coob.SetActive(false);
+                    GameObject coobGO = Object.Instantiate(GameObject.Find("NormalGameNote").transform.Find("NoteCube")).gameObject;
+                    Object.DontDestroyOnLoad(coobGO);
+                    container.ParentContainers[0].Bind<Coob>().FromNewComponentOn(coobGO).AsSingle();
+
+                    Log?.Info("Stole the coob!!");
                 }
 
                 return true;
             });
-
-            zenjector.OnGame<CoobInstaller>();
         }
 
         [OnStart]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SlicePause.Objects;
+using System;
 using UnityEngine;
 using Zenject;
 
@@ -10,12 +11,11 @@ namespace SlicePause.Installers
 
         public override void Start()
         {
-            if (Plugin.coob != null) {
-                Plugin.coob.SetActive(true);
-                Plugin.coob.transform.position = new Vector3(Plugin.Config.posX, Plugin.Config.posY, Plugin.Config.posZ);
-                Plugin.coob.transform.rotation = new Quaternion(Plugin.Config.rotX, Plugin.Config.rotY, Plugin.Config.rotZ, Plugin.Config.rotW);
+            Coob coob = Container.Resolve<Coob>();
+            if (coob != null) {
+                coob.SetVisible(true);
 
-                BoxCuttableBySaber[] boxes = Plugin.coob.GetComponentsInChildren<BoxCuttableBySaber>();
+                BoxCuttableBySaber[] boxes = coob.GetComponentsInChildren<BoxCuttableBySaber>();
 
                 BoxCuttableBySaber.WasCutBySaberDelegate pausepls = (Saber saber, Vector3 cutPoint, Quaternion orientation, Vector3 cutDirVec) =>
                 {
