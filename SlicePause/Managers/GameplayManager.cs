@@ -42,6 +42,6 @@ namespace SlicePause.Managers
 
 		private void HandleCoobWasCut() => _pauseController.Pause();
 		private void HandlePauseEvent() => _coob.Despawn();
-		private void HandleResumeEvent() => _coob.Respawn(cutTimeout);
+		private void HandleResumeEvent() => _coob.Respawn(cutTimeout, true);
 	}
 }

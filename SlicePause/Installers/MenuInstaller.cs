@@ -10,7 +10,7 @@ namespace SlicePause.Installers
 	{
 		public override void InstallBindings()
 		{
-			Container.BindInterfacesAndSelfTo<CoobTab>().AsSingle();
+			Container.BindInterfacesTo<CoobTab>().FromNewComponentOnRoot().AsSingle();
 			Container.BindInterfacesTo<MenuManager>().FromNewComponentOnRoot().AsSingle();
 			Coob coob = Container.Resolve<Coob>();
 

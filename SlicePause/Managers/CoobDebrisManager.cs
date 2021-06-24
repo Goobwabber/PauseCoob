@@ -38,7 +38,7 @@ namespace SlicePause.Managers
                 DebrisColorPatch.color = noteColor;
 
                 noteDebris.Init(ColorType.None, noteTransform.position, noteTransform.rotation, noteMoveVec, noteTransform.localScale, Vector3.zero, Quaternion.identity, noteCutInfo.cutPoint, -noteCutInfo.cutNormal, force, -torque, lifetime);
-                noteDebris.Init(ColorType.None, noteTransform.position, noteTransform.rotation, noteMoveVec, noteTransform.localScale, Vector3.zero, Quaternion.identity, noteCutInfo.cutPoint, noteCutInfo.cutNormal, force2, torque, lifetime);
+                noteDebris2.Init(ColorType.None, noteTransform.position, noteTransform.rotation, noteMoveVec, noteTransform.localScale, Vector3.zero, Quaternion.identity, noteCutInfo.cutPoint, noteCutInfo.cutNormal, force2, torque, lifetime);
 
                 DebrisColorPatch.enabled = false;
             }

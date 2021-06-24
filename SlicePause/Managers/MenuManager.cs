@@ -7,7 +7,7 @@ namespace SlicePause.Managers
 {
 	public class MenuManager : MonoBehaviour, IInitializable, IDisposable
 	{
-		protected  Coob _coob = null!;
+		protected Coob _coob = null!;
 		protected Floatie _floatie = null!;
 		private const float cutTimeout = 0.5f;
 
@@ -17,12 +17,18 @@ namespace SlicePause.Managers
 			_coob = coob;
 		}
 
-		public void OnEnable() => Initialize();
+		public void OnEnable()
+		{
+			if (_coob != null)
+				Initialize();
+		}
+		
 		public void OnDisable() => Dispose();
 
 		public void Initialize()
 		{
-			_coob.Respawn(0f, false);
+			_coob.Respawn(0f);
+			_coob.SetVisible(false);
 			_coob.Refresh();
 			_coob.cutable = false;
 

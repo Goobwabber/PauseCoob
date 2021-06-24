@@ -1,4 +1,5 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Components.Settings;
 using BeatSaberMarkupLanguage.GameplaySetup;
 using SlicePause.Objects;
 using System;
@@ -10,7 +11,7 @@ using Zenject;
 
 namespace SlicePause.UI
 {
-	class CoobTab : IInitializable, IDisposable, INotifyPropertyChanged
+	class CoobTab : MonoBehaviour, IInitializable, IDisposable, INotifyPropertyChanged
 	{
 		private GameplaySetupViewController gameplaySetupViewController;
 		private Coob coob;
@@ -51,6 +52,20 @@ namespace SlicePause.UI
 			}
 		}
 
+		[UIComponent("cut-angle-tolerance")]
+		private readonly IncrementSetting cutAngleTolerance = null!;
+
+		[UIValue("coob-angle-tolerance")]
+		public float CoobAngleToleranceValue
+		{
+			get => coob.cutAngleTolerance * 2;
+			set
+			{
+				coob.cutAngleTolerance = value / 2;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CoobAngleToleranceValue)));
+			}
+		}
+
 		[UIValue("coob-type")]
 		public Coob.CoobType CoobTypeValue
 		{
@@ -58,6 +73,7 @@ namespace SlicePause.UI
 			set
 			{
 				coob.type = value;
+				cutAngleTolerance.interactable = value == Coob.CoobType.Arrow;
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CoobTypeValue)));
 			}
 		}
@@ -68,7 +84,8 @@ namespace SlicePause.UI
 		[UIAction("coob-type-formatter")]
 		public string CoobTypeFormatter(Coob.CoobType type) => type.ToString();
 
-		public CoobTab(Coob _coob, GameplaySetupViewController _gameplaySetupViewController)
+		[Inject]
+		internal void Inject(Coob _coob, GameplaySetupViewController _gameplaySetupViewController)
 		{
 			coob = _coob;
 			gameplaySetupViewController = _gameplaySetupViewController;
@@ -81,6 +98,12 @@ namespace SlicePause.UI
 			GameplaySetup.instance.AddTab("Coob", "SlicePause.UI.CoobTab.bsml", this, MenuType.All);
 
 			Plugin.Log?.Info("Installed Coob UI");
+		}
+
+		public void OnEnable()
+		{
+			if (coob != null)
+				ShowCoobValue = false;
 		}
 
 		public void Dispose()

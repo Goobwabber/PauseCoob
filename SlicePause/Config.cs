@@ -12,5 +12,6 @@
 		public virtual float Scale { get; set; } = 1f;
 		public virtual string Color { get; set; } = "#00000000";
 		public virtual int Type { get; set; } = 1;
+		public virtual float CutAngleTolerance { get; set; } = 45f;
 	}
 }

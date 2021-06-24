@@ -13,6 +13,10 @@ namespace SlicePause.Objects
 		private Collider _collider = null!;
 		private CutoutAnimateEffect _animateEffect = null!;
 		private BoxCuttableBySaber[] _cutableBoxes = null!;
+		private BoxCuttableBySaber _mainBox = null!;
+
+		private LineRenderer _hitBoxRenderer = null!;
+		private LineRenderer _hitAngleRenderer = null!;
 
 		protected CoobCutInfoManager _coobCutInfoManager = null!;
 		protected CoobDebrisManager _coobDebrisManager = null!;
@@ -20,8 +24,21 @@ namespace SlicePause.Objects
 
 		private bool _cutable = false;
 		private bool _visible = false;
+		private float _cutAngleTolerance = 90f;
+
+		public bool anyDirection => type != CoobType.Arrow;
+		public float cutAngleTolerance
+		{
+			get => _cutAngleTolerance;
+			set
+			{
+				_cutAngleTolerance = value;
+				Plugin.Config.CutAngleTolerance = _cutAngleTolerance;
+			}
+		}
 
 		const float cutoutTime = 1f;
+		Color debugColor = Color.white;
 
 		public event Action CoobWasCutEvent = null!;
 
@@ -72,6 +89,7 @@ namespace SlicePause.Objects
 			CutoutEffect[] cutoutEffects = GetComponents<CutoutEffect>();
 			_animateEffect.SetField<CutoutAnimateEffect, CutoutEffect[]>("_cuttoutEffects", cutoutEffects);
 			_cutableBoxes = GetComponentsInChildren<BoxCuttableBySaber>();
+			_mainBox = transform.Find("BigCuttable").GetComponent<BoxCuttableBySaber>();
 
 			foreach (BoxCuttableBySaber box in _cutableBoxes)
 			{
@@ -160,6 +178,8 @@ namespace SlicePause.Objects
 			SetScale(Plugin.Config.Scale);
 			SetType((CoobType)Plugin.Config.Type);
 
+			cutAngleTolerance = Plugin.Config.CutAngleTolerance;
+
 			Color color;
 			if (ColorUtility.TryParseHtmlString(Plugin.Config.Color, out color))
 			{
@@ -171,31 +191,25 @@ namespace SlicePause.Objects
 		{
 			if (cutable == true)
 			{
-				cutable = false;
-				StartCoroutine(DespawnCoob());
-
-				if (_coobCutInfoManager != null)
+				NoteCutInfo noteCutInfo;
+				if (_coobCutInfoManager != null && _coobCutInfoManager.GetCutInfo(this.transform, saber, cutPoint, orientation, cutDirVec, cutAngleTolerance, anyDirection, out noteCutInfo))
 				{
-					NoteCutInfo noteCutInfo = _coobCutInfoManager.GetCutInfo(this.transform, saber, cutPoint, orientation, cutDirVec, 90f);
-
-					//flyingScoreSpawner.SpawnFlyingScore(in noteCutInfo, 0, 8, transform.position, transform.rotation, Quaternion.Inverse(transform.rotation), color);
 					if (_coobFlyingScoreManager != null)
 						_coobFlyingScoreManager.SpawnFlyingScore(this.transform, in noteCutInfo, Vector3.up, color, 0.7f, 1);
 
-					//noteDebrisSpawner.SpawnDebris(noteCutInfo.cutPoint, noteCutInfo.cutNormal, noteCutInfo.saberSpeed, noteCutInfo.saberDir, transform.position, transform.rotation, transform.localScale, ColorType.ColorA, 10f, new Vector3(0, 1, 0));
 					if (_coobDebrisManager != null)
 						_coobDebrisManager.SpawnDebris(this.transform, noteCutInfo, color, Vector3.up);
-				}
-				else
-					Plugin.Log?.Warn("Requirements for block cut not found.");
 
-				CoobWasCutEvent?.Invoke();
+					cutable = false;
+					StartCoroutine(DespawnCoob());
+					CoobWasCutEvent?.Invoke();
+				}
 			}
 		}
 
-		public void Respawn(float delay, bool visibility = true)
+		public void Respawn(float delay, bool cuttable = false)
 		{
-			StartCoroutine(RespawnCoob(delay, visibility));
+			StartCoroutine(RespawnCoob(delay, cuttable));
 		}
 
 		public void Despawn()
@@ -210,12 +224,11 @@ namespace SlicePause.Objects
 			yield return null;
 		}
 
-		IEnumerator RespawnCoob(float delay, bool visibility)
+		IEnumerator RespawnCoob(float delay, bool cuttable)
 		{
 			yield return new WaitForSeconds(delay);
 			yield return _animateEffect.AnimateToCutoutCoroutine(1f, 0f, Time.deltaTime * cutoutTime);
-			SetVisible(visibility);
-			cutable = visibility;
+			_cutable = cuttable;
 			yield return null;
 		}
 
