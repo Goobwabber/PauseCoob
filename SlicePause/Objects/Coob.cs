@@ -207,9 +207,9 @@ namespace SlicePause.Objects
 			}
 		}
 
-		public void Respawn(float delay, bool cuttable = false)
+		public void Respawn(float delay, bool cuttable = false, bool visibility = false)
 		{
-			StartCoroutine(RespawnCoob(delay, cuttable));
+			StartCoroutine(RespawnCoob(delay, cuttable, visibility));
 		}
 
 		public void Despawn()
@@ -224,11 +224,12 @@ namespace SlicePause.Objects
 			yield return null;
 		}
 
-		IEnumerator RespawnCoob(float delay, bool cuttable)
+		IEnumerator RespawnCoob(float delay, bool cuttable, bool visibility)
 		{
 			yield return new WaitForSeconds(delay);
 			yield return _animateEffect.AnimateToCutoutCoroutine(1f, 0f, Time.deltaTime * cutoutTime);
 			_cutable = cuttable;
+			SetVisible(visibility);
 			yield return null;
 		}
 
