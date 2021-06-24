@@ -1,7 +1,7 @@
 # PauseCoob (PC Only) [![Build](https://github.com/Goobwabber/PauseCoob/workflows/Build/badge.svg?event=push)](https://github.com/Goobwabber/PauseCoob/actions?query=workflow%3ABuild+branch%3Amain)
 A Beat Saber mod that pauses the game when you slice a coob.
 
-## What is a coob?
+### What is a coob?
 Coob -> cuub -> cube 😃
 
 ## Features
