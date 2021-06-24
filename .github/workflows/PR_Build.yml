@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [ master ]
     paths:
-      - 'BeatsaberOptimizer/**'
+      - 'PauseCoob/**'
 
 jobs:
   Build:
@@ -24,7 +24,7 @@ jobs:
     - name: Download Mod Dependencies
       uses: Goobwabber/download-beatmods-deps@1.1
       with:
-        manifest: ./BeatsaberOptimizer/manifest.json
+        manifest: ./PauseCoob/manifest.json
     - name: Build
       id: Build
       env: 
@@ -59,7 +59,7 @@ jobs:
     - name: Download Mod Dependencies
       uses: Goobwabber/download-beatmods-deps@1.1
       with:
-        manifest: ./BeatsaberOptimizer/manifest.json
+        manifest: ./PauseCoob/manifest.json
     - name: Test
       id: Test
       env: 
