@@ -31,7 +31,7 @@ namespace SlicePause.Managers
                 Vector3 vector2 = vector * (noteCutInfo.saberSpeed * cutSpeedMultiplier) + noteMoveVec;
 
                 Vector3 force = Quaternion.identity * (-(noteCutInfo.cutNormal + UnityEngine.Random.onUnitSphere * 0.1f) * separationSpeed + vector2);
-                Vector3 force2 = Quaternion.identity * (-(noteCutInfo.cutNormal + UnityEngine.Random.onUnitSphere * 0.1f) * separationSpeed + vector2);
+                Vector3 force2 = Quaternion.identity * ((noteCutInfo.cutNormal + UnityEngine.Random.onUnitSphere * 0.1f) * separationSpeed + vector2);
                 Vector3 torque = Quaternion.identity * Vector3.Cross(noteCutInfo.cutNormal, vector) * torqueMultiplier;
 
                 DebrisColorPatch.enabled = true;
