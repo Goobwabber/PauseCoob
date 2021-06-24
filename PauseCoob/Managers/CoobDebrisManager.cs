@@ -1,9 +1,9 @@
-﻿using SlicePause.HarmonyPatches;
+﻿using PauseCoob.HarmonyPatches;
 using System;
 using UnityEngine;
 using Zenject;
 
-namespace SlicePause.Managers
+namespace PauseCoob.Managers
 {
     public class CoobDebrisManager : INoteDebrisDidFinishEvent
     {

@@ -1,9 +1,9 @@
-﻿using SlicePause.Objects;
+﻿using PauseCoob.Objects;
 using System;
 using UnityEngine;
 using Zenject;
 
-namespace SlicePause.Managers
+namespace PauseCoob.Managers
 {
 	public class GameplayManager : IInitializable, IDisposable
 	{

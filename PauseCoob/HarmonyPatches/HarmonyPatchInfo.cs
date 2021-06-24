@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace SlicePause.HarmonyPatches
+namespace PauseCoob.HarmonyPatches
 {
 	public class HarmonyPatchInfo
 	{

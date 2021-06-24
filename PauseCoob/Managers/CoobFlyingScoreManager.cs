@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace SlicePause.Managers
+namespace PauseCoob.Managers
 {
 	public class CoobFlyingScoreManager : IFlyingObjectEffectDidFinishEvent
 	{

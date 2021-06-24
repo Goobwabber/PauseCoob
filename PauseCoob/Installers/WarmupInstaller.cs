@@ -1,10 +1,10 @@
-﻿using SlicePause.Managers;
-using SlicePause.Objects;
+﻿using PauseCoob.Managers;
+using PauseCoob.Objects;
 using UnityEngine;
 using System;
 using Zenject;
 
-namespace SlicePause.Installers
+namespace PauseCoob.Installers
 {
 	class WarmupInstaller : MonoInstaller
 	{

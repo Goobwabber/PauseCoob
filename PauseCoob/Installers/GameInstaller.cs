@@ -1,10 +1,10 @@
 ﻿using IPA.Utilities;
-using SlicePause.Managers;
+using PauseCoob.Managers;
 using System.Linq;
 using UnityEngine;
 using Zenject;
 
-namespace SlicePause.Installers
+namespace PauseCoob.Installers
 {
 	class GameInstaller : MonoInstaller
 	{

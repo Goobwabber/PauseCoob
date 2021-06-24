@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 
-namespace SlicePause.HarmonyPatches
+namespace PauseCoob.HarmonyPatches
 {
 	[HarmonyPatch(typeof(ColorManager), nameof(ColorManager.ColorForType), MethodType.Normal)]
 	internal class DebrisColorPatch

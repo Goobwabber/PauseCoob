@@ -1,4 +1,4 @@
-﻿namespace SlicePause
+﻿namespace PauseCoob
 {
 	public class PluginConfig
 	{

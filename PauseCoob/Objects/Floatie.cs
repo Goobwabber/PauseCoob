@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using VRUIControls;
 
-namespace SlicePause.Objects
+namespace PauseCoob.Objects
 {
 	public class Floatie : MonoBehaviour
 	{

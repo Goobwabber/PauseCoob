@@ -1,7 +1,7 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components.Settings;
 using BeatSaberMarkupLanguage.GameplaySetup;
-using SlicePause.Objects;
+using PauseCoob.Objects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using System.Linq;
 using UnityEngine;
 using Zenject;
 
-namespace SlicePause.UI
+namespace PauseCoob.UI
 {
 	class CoobTab : MonoBehaviour, IInitializable, IDisposable, INotifyPropertyChanged
 	{
@@ -95,7 +95,7 @@ namespace SlicePause.UI
 		{
 			gameplaySetupViewController.didDeactivateEvent += YeetModalEvent;
 
-			GameplaySetup.instance.AddTab("Coob", "SlicePause.UI.CoobTab.bsml", this, MenuType.All);
+			GameplaySetup.instance.AddTab("Coob", "PauseCoob.UI.CoobTab.bsml", this, MenuType.All);
 
 			Plugin.Log?.Info("Installed Coob UI");
 		}

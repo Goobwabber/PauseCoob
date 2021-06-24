@@ -1,10 +1,10 @@
-﻿using SlicePause.Managers;
-using SlicePause.Objects;
-using SlicePause.UI;
+﻿using PauseCoob.Managers;
+using PauseCoob.Objects;
+using PauseCoob.UI;
 using System;
 using Zenject;
 
-namespace SlicePause.Installers
+namespace PauseCoob.Installers
 {
 	class MenuInstaller : MonoInstaller
 	{

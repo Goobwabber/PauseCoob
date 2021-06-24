@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace SlicePause.HarmonyPatches
+namespace PauseCoob.HarmonyPatches
 {
 	public static class HarmonyManager
 	{

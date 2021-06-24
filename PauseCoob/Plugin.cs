@@ -4,12 +4,12 @@ using IPA.Config;
 using IPA.Config.Stores;
 using IPA.Loader;
 using SiraUtil.Zenject;
-using SlicePause.HarmonyPatches;
-using SlicePause.Installers;
+using PauseCoob.HarmonyPatches;
+using PauseCoob.Installers;
 using System.Net.Http;
 using IPALogger = IPA.Logging.Logger;
 
-namespace SlicePause
+namespace PauseCoob
 {
 	[Plugin(RuntimeOptions.SingleStartInit)]
 	public class Plugin

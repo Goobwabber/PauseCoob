@@ -1,11 +1,11 @@
 ﻿using IPA.Utilities;
-using SlicePause.Managers;
+using PauseCoob.Managers;
 using System;
 using System.Collections;
 using UnityEngine;
 using Zenject;
 
-namespace SlicePause.Objects
+namespace PauseCoob.Objects
 {
 	public class Coob : MonoBehaviour, IDisposable
 	{
