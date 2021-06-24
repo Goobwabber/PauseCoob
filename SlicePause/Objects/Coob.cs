@@ -228,8 +228,8 @@ namespace SlicePause.Objects
 		{
 			yield return new WaitForSeconds(delay);
 			yield return _animateEffect.AnimateToCutoutCoroutine(1f, 0f, Time.deltaTime * cutoutTime);
-			_cutable = cuttable;
 			SetVisible(visibility);
+			SetCutable(cuttable);
 			yield return null;
 		}
 
