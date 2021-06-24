@@ -13,6 +13,8 @@ using SlicePause.Objects;
 using Zenject;
 using SlicePause.Managers;
 using UnityEngine.SceneManagement;
+using System.Linq;
+using IPA.Utilities;
 
 namespace SlicePause
 {
@@ -46,24 +48,7 @@ namespace SlicePause
 
             zenjector.OnMenu<MenuInstaller>();
             zenjector.OnGame<GameInstaller>();
-            zenjector.On((scene, context, Container) => {
-                if (scene.name == "ShaderWarmup")
-                {
-                    GameObject coobGO = Object.Instantiate(GameObject.Find("NormalGameNote").transform.Find("NoteCube")).gameObject;
-                    Object.DontDestroyOnLoad(coobGO);
-
-                    DiContainer AppContainer = Container.ParentContainers[0];
-
-                    AppContainer.BindInterfacesAndSelfTo<CoobCutInfoManager>().AsSingle();
-                    AppContainer.BindInterfacesAndSelfTo<CoobDebrisManager>().AsSingle();
-                    AppContainer.BindInterfacesAndSelfTo<CoobFlyingScoreManager>().AsSingle();
-                    AppContainer.Bind<Coob>().FromNewComponentOn(coobGO).AsSingle();
-
-                    Log?.Info("ShaderWarmup finished.");
-                }
-
-                return true;
-            });
+            zenjector.Register<WarmupInstaller>().On<ShaderWarmupSceneSetup>();
         }
 
         [OnStart]

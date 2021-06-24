@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IPA.Utilities;
+using System;
 using System.Linq;
 using UnityEngine;
 using VRUIControls;
@@ -8,8 +9,6 @@ namespace SlicePause.Objects
 {
     public class MenuSaber : Saber
     {
-        protected const float MaxCutDistance = 50;
-
         protected VRPointer _vrPointer = null!;
         protected NoteCutter _noteCutter = null!;
 
@@ -17,6 +16,9 @@ namespace SlicePause.Objects
         {
             _noteCutter = new NoteCutter();
             _vrPointer = Resources.FindObjectsOfTypeAll<VRPointer>().FirstOrDefault();
+            SaberTypeObject saberTypeObject = gameObject.AddComponent<SaberTypeObject>();
+            saberTypeObject.SetField<SaberTypeObject, SaberType>("_saberType", SaberType.SaberA);
+            _saberType = saberTypeObject;
         }
 
         public void Update()
@@ -29,10 +31,10 @@ namespace SlicePause.Objects
         {
             if (!gameObject.activeInHierarchy)
                 return;
-            _handlePos = _vrPointer.transform.position;
-            _handleRot = _vrPointer.transform.rotation;
+            _handlePos = _vrPointer.vrController.position;
+            _handleRot = _vrPointer.vrController.rotation;
             _saberBladeTopPos = _vrPointer.cursorPosition;
-            _saberBladeBottomPos = _vrPointer.transform.position;
+            _saberBladeBottomPos = _vrPointer.vrController.position;
             _movementData.AddNewData(_saberBladeTopPos, _saberBladeBottomPos, TimeHelper.time);
         }
 
@@ -41,5 +43,7 @@ namespace SlicePause.Objects
             _handlePos = pos;
             _handleRot = rot;
         }
+
+        
     }
 }

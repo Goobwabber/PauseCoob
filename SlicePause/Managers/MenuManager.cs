@@ -26,17 +26,17 @@ namespace SlicePause.Managers
             _floatie = _coob.GetComponent<Floatie>();
             _floatie.Init(_coob.gameObject);
 
-            _coob.CoobWasCutEvent += HandleCoobWasCut;
+            //_coob.CoobWasCutEvent += HandleCoobWasCut;
             _floatie.OnRelease += HandleCoobWasMoved;
         }
 
         public void Dispose()
         {
-            _coob.CoobWasCutEvent -= HandleCoobWasCut;
+            //_coob.CoobWasCutEvent -= HandleCoobWasCut;
             _floatie.OnRelease -= HandleCoobWasMoved;
         }
 
-        private void HandleCoobWasCut() => _coob.Respawn(cutTimeout);
+        //private void HandleCoobWasCut() => _coob.Respawn(cutTimeout);
         private void HandleCoobWasMoved(Vector3 position, Quaternion rotation) => _coob.SetPositionAndRotation(position, rotation);
     }
 }

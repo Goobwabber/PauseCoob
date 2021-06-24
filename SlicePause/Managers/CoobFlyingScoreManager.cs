@@ -20,7 +20,7 @@ namespace SlicePause.Managers
                 FlyingScoreEffect flyingScoreEffect = _flyingScoreEffectPool.Spawn();
                 flyingScoreEffect.didFinishEvent.Add(this);
                 flyingScoreEffect.transform.position = noteTransform.position;
-                flyingScoreEffect.InitAndPresent(noteCutInfo, multiplier, duration, targetOffset + noteTransform.position, noteTransform.rotation, color);
+                flyingScoreEffect.InitAndPresent(noteCutInfo, multiplier, duration, targetOffset + noteTransform.position, Quaternion.identity, color);
             }
             else
                 Plugin.Log?.Warn("FlyingScoreEffectPool not found!");

@@ -7,6 +7,7 @@ namespace SlicePause.Managers
     class GameplayManager : IInitializable, IDisposable
     {
         protected Coob _coob = null!;
+        protected Floatie _floatie = null!;
         protected PauseController _pauseController = null!;
         private const float cutTimeout = 2f;
 
@@ -21,6 +22,7 @@ namespace SlicePause.Managers
         {
             _coob.SetVisible(true);
             _coob.cutable = true;
+            _floatie = _coob.GetComponent<Floatie>();
 
             _coob.CoobWasCutEvent += HandleCoobWasCut;
             _pauseController.didPauseEvent += HandlePauseEvent;

@@ -10,7 +10,7 @@ namespace SlicePause.Managers
         protected NoteDebris.Pool _noteDebrisPool = null!;
 
         [Inject]
-        internal void Inject([InjectOptional]NoteDebris.Pool noteDebrisPool)
+        internal void Inject([InjectOptional] NoteDebris.Pool noteDebrisPool)
         {
             _noteDebrisPool = noteDebrisPool;
         }
@@ -37,7 +37,7 @@ namespace SlicePause.Managers
                 DebrisColorPatch.enabled = true;
                 DebrisColorPatch.color = noteColor;
 
-                noteDebris.Init(ColorType.None, noteTransform.position, noteTransform.rotation, noteMoveVec, noteTransform.localScale, Vector3.zero, Quaternion.identity, noteCutInfo.cutPoint, noteCutInfo.cutNormal, force, torque, lifetime);
+                noteDebris.Init(ColorType.None, noteTransform.position, noteTransform.rotation, noteMoveVec, noteTransform.localScale, Vector3.zero, Quaternion.identity, noteCutInfo.cutPoint, -noteCutInfo.cutNormal, force, -torque, lifetime);
                 noteDebris.Init(ColorType.None, noteTransform.position, noteTransform.rotation, noteMoveVec, noteTransform.localScale, Vector3.zero, Quaternion.identity, noteCutInfo.cutPoint, noteCutInfo.cutNormal, force2, torque, lifetime);
 
                 DebrisColorPatch.enabled = false;

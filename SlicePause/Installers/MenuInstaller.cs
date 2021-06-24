@@ -16,7 +16,7 @@ namespace SlicePause.Installers
             Container.BindInterfacesAndSelfTo<MenuManager>().AsSingle();
             Coob coob = Container.Resolve<Coob>();
 
-            Container.InstantiateComponentOnNewGameObject<MenuSaber>("CoobMenuSaber");
+            //Container.InstantiateComponentOnNewGameObject<MenuSaber>("CoobMenuSaber");
 
             if (coob.GetComponent<Floatie>() == null)
                 Container.InstantiateComponent<Floatie>(coob.gameObject);

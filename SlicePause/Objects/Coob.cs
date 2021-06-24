@@ -56,7 +56,7 @@ namespace SlicePause.Objects
         }
 
         [Inject]
-        internal void Inject([InjectOptional] CoobCutInfoManager coobCutInfoManager, [InjectOptional] CoobDebrisManager coobDebrisManager, [InjectOptional] CoobFlyingScoreManager coobFlyingScoreManager)
+        internal void Inject(CoobCutInfoManager coobCutInfoManager, CoobDebrisManager coobDebrisManager, CoobFlyingScoreManager coobFlyingScoreManager)
         {
             _coobCutInfoManager = coobCutInfoManager;
             _coobDebrisManager = coobDebrisManager;
@@ -65,6 +65,7 @@ namespace SlicePause.Objects
 
         public void Awake()
         {
+            gameObject.layer = 0;
             _collider = gameObject.AddComponent<BoxCollider>();
             _renderer = GetComponent<MeshRenderer>();
             _animateEffect = gameObject.AddComponent<CutoutAnimateEffect>();
