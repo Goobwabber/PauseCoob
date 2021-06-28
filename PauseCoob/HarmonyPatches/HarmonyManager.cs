@@ -27,6 +27,8 @@ namespace PauseCoob.HarmonyPatches
 		static HarmonyManager()
 		{
 			AddDefaultPatch<DebrisColorPatch>();
+			AddDefaultPatch<ShowMultiplayerMenuPatch>();
+			AddDefaultPatch<HideMultiplayerMenuPatch>();
 		}
 
 		private static void AddDefaultPatch<T>() where T : class

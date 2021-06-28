@@ -12,7 +12,6 @@ namespace PauseCoob.Installers
 
 		public override void InstallBindings()
 		{
-			Plugin.Log?.Info("Starting ShaderWarmup");
 			coobGO = Instantiate(GameObject.Find("NormalGameNote").transform.Find("NoteCube")).gameObject;
 			DontDestroyOnLoad(coobGO);
 

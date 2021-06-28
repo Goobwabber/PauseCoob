@@ -12,8 +12,6 @@ namespace PauseCoob.Installers
 		{
 			Container.BindInterfacesAndSelfTo<GameplayManager>().AsSingle();
 
-			Plugin.Log?.Info("Coob installed in game scene.");
-
 			DiContainer AppContainer = Container.ParentContainers[0];
 
 			EffectPoolsManualInstaller effectPoolsManualInstaller = Resources.FindObjectsOfTypeAll<EffectPoolsManualInstaller>().FirstOrDefault();
@@ -40,6 +38,8 @@ namespace PauseCoob.Installers
 			Container.Inject(Container.Resolve<CoobCutInfoManager>());
 			Container.Inject(Container.Resolve<CoobFlyingScoreManager>());
 			Container.Inject(Container.Resolve<CoobDebrisManager>());
+
+			Plugin.Log?.Info("Coob installed in game scene.");
 		}
 	}
 }

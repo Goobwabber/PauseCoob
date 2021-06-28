@@ -40,7 +40,7 @@ namespace PauseCoob
 			Config = conf.Generated<PluginConfig>();
 
 			zenjector.OnMenu<MenuInstaller>();
-			zenjector.OnGame<GameInstaller>();
+			zenjector.Register<GameInstaller>().On<GameplayCoreInstaller>();
 			zenjector.Register<WarmupInstaller>().On<ShaderWarmupSceneSetup>();
 		}
 
