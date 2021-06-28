@@ -3,7 +3,7 @@
   "id": "SlicePause",
   "name": "SlicePause",
   "author": "Goobwabber",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Slice to pause.",
   "gameVersion": "1.16.2",
   "dependsOn": {
