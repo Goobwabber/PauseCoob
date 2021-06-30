@@ -11,6 +11,9 @@
     "SiraUtil": "^2.5.2",
     "BeatSaberMarkupLanguage": "^1.5.1"
   },
+  "loadAfter": [
+    "HitScoreVisualizer"
+  ],
   "links": {
     "project-home": "https://github.com/Goobwabber/PauseCoob",
     "donate": "https://github.com/Goobwabber/PauseCoob#donate"
