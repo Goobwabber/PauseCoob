@@ -8,7 +8,7 @@ namespace PauseCoob.HarmonyPatches
 {
 	public static class HarmonyManager
 	{
-		public static readonly string HarmonyId = "com.github.Goobwabber.SlicePause";
+		public static readonly string HarmonyId = "com.github.Goobwabber.PauseCoob";
 		private static Harmony? _harmony;
 		internal static Harmony Harmony
 		{

@@ -14,7 +14,7 @@ namespace PauseCoob
 	[Plugin(RuntimeOptions.SingleStartInit)]
 	public class Plugin
 	{
-		public static readonly string HarmonyId = "com.github.Goobwabber.SlicePause";
+		public static readonly string HarmonyId = "com.github.Goobwabber.PauseCoob";
 
 		internal static Plugin Instance { get; private set; } = null!;
 		internal static PluginMetadata PluginMetadata = null!;
@@ -40,7 +40,8 @@ namespace PauseCoob
 			Config = conf.Generated<PluginConfig>();
 
 			zenjector.OnMenu<MenuInstaller>();
-			zenjector.Register<GameInstaller>().On<GameplayCoreInstaller>();
+			zenjector.OnGame<EffectInstaller>();
+			zenjector.OnGame<GameInstaller>().ShortCircuitForMultiplayer();
 			zenjector.Register<WarmupInstaller>().On<ShaderWarmupSceneSetup>();
 		}
 

@@ -1,9 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
-  "id": "SlicePause",
-  "name": "SlicePause",
+  "id": "PauseCoob",
+  "name": "PauseCoob",
   "author": "Goobwabber",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Slice to pause.",
   "gameVersion": "1.16.2",
   "dependsOn": {
