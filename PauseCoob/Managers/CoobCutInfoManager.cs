@@ -30,7 +30,7 @@ namespace PauseCoob.Managers
 				if (speedOK && directionOK)
 				{
 					saberSwingRatingCounter = _saberSwingRatingCounterPool.Spawn();
-					saberSwingRatingCounter.Init(saber.movementData, noteTransform);
+					saberSwingRatingCounter.Init(saber.movementData, noteTransform, true, true);
 					saberSwingRatingCounter.RegisterDidFinishReceiver(this);
 				}
 				else
